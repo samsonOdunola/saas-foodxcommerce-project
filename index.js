@@ -10,9 +10,9 @@ const port = process.env.PORT || 5000;
 
 const connectDb = async () => {
   try {
-    syncDb({ force: false });
+    syncDb();
     // await Mongoose.connect(mongoUri, options);
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     console.log('Database connected');
     App.listen(port, () => {
       console.log(`Server is listening on port ${port}`);

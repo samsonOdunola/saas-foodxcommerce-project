@@ -1,22 +1,26 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/mysql.config');
 
-class Review extends Model { }
+class ProductReview extends Model { }
 
-Review.init({
+ProductReview.init({
   id: {
     primaryKey: true,
     type: DataTypes.INTEGER,
     autoIncrement: true,
     unique: true,
   },
-  review: {
+  content: {
     type: DataTypes.TEXT('long'),
+  },
+  rating: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
 }, {
   sequelize,
   timestamps: true,
-  modelName: 'Review',
+  modelName: 'Product_Review',
 });
 
-module.exports = Review;
+module.exports = ProductReview;

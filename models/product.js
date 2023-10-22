@@ -1,30 +1,38 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/mysql.config');
 
-class Inventory extends Model { }
+class Product extends Model { }
 
-Inventory.init({
+Product.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     unique: true,
     autoIncrement: true,
-    allowNull: true,
+    allowNull: false,
   },
-  name: {
+  title: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
-  category: {
+  metaTitle: {
     type: DataTypes.STRING,
   },
   sellingPrice: {
     type: DataTypes.INTEGER,
+    allowNull: false,
   },
   costPrice: {
     type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  discount: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
   },
   quantity: {
     type: DataTypes.INTEGER,
+    allowNull: false,
   },
   longDescription: {
     type: DataTypes.STRING,
@@ -35,23 +43,20 @@ Inventory.init({
   image: {
     type: DataTypes.STRING,
   },
-  orders: {
-    type: DataTypes.INTEGER,
-  },
+
   views: {
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
-  rating: {
-    type: DataTypes.INTEGER,
 
-  },
   likes: {
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
 }, {
   sequelize,
   timestamps: true,
-  modelName: 'Inventory',
+  modelName: 'Product',
 });
 
-module.exports = Inventory;
+module.exports = Product;

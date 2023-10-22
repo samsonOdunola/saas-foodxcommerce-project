@@ -1,35 +1,72 @@
-const { DataTypes, Model, UUIDV4 } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/mysql.config');
 
 class Order extends Model { }
 
 Order.init({
   id: {
-    type: DataTypes.UUID,
+    type: DataTypes.BIGINT,
     primaryKey: true,
     unique: true,
-    defaultValue: UUIDV4,
+    autoIncrement: true,
+    allowNull: false,
   },
+  token: {
+    type: DataTypes.STRING,
+    allowNull: true,
 
-  paymentType: {
-    type: DataTypes.ENUM('Cash', 'Transfer'),
-    allowNulll: false,
   },
-
-  orderStatus: {
-    type: DataTypes.ENUM('Pending', 'complete', 'cancelled', 'incomplete'),
+  status: {
+    type: DataTypes.ENUM('New', 'Checkout', 'Paid', 'Failed', 'Shipped', 'Delivered', 'Returned', 'Complete'),
   },
-  orderDate: {
-    type: DataTypes.DATEONLY,
-  },
-  orderNote: {
+  note: {
     type: DataTypes.TEXT('medium'),
+    allowNull: true,
   },
-  subTotal: {
-    type: DataTypes.INTEGER,
+  tax: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
   },
-  deliveryCost: {
-    type: DataTypes.INTEGER,
+  shipping: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
+  discount: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
+  grandTotal: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    defaultValue: 0,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  state: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  country: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 
 }, {

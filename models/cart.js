@@ -10,9 +10,9 @@ Cart.init({
     primaryKey: true,
     unique: true,
   },
-
-  quantity: {
-    type: DataTypes.INTEGER,
+  status: {
+    type: DataTypes.ENUM('New', 'Cart', 'Checkout', 'Paid', 'Complete', 'Abandoned'),
+    defaultValue: 'New',
   },
 }, {
   sequelize,
