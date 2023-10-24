@@ -4,15 +4,11 @@ const sequelize = require('../config/mysql.config');
 class OrderItem extends Model { }
 
 OrderItem.init({
-  id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-  },
+
   quantity: {
     type: DataTypes.INTEGER,
-    defaultValue: 1,
+    defaultValue: 0,
+
   },
   discount: {
     type: DataTypes.FLOAT,

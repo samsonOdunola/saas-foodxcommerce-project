@@ -35,7 +35,7 @@ const syncDb = () => {
 
   // Define Product associations
   Product.belongsToMany(Order, { through: OrderItem });
-  Product.belongsToMany(Cart, { through: CartItem });
+  Product.belongsToMany(Cart, { through: CartItem, uniqueKey: false });
 
   Product.hasMany(ProductReview);
   ProductReview.belongsTo(Product);

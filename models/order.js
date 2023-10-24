@@ -23,6 +23,10 @@ Order.init({
     type: DataTypes.TEXT('medium'),
     allowNull: true,
   },
+  subTotal: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
   tax: {
     type: DataTypes.FLOAT,
     defaultValue: 0,
