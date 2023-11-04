@@ -10,6 +10,7 @@ const ProductImage = require('../models/product_images');
 const ProductReview = require('../models/product_review');
 const PromoCode = require('../models/promoCode');
 const Transaction = require('../models/transaction');
+const Address = require('../models/address');
 
 const syncDb = () => {
   // Define Customer Associations
@@ -35,7 +36,7 @@ const syncDb = () => {
 
   // Define Product associations
   Product.belongsToMany(Order, { through: OrderItem });
-  Product.belongsToMany(Cart, { through: CartItem, uniqueKey: false });
+  Product.belongsToMany(Cart, { through: CartItem });
 
   Product.hasMany(ProductReview);
   ProductReview.belongsTo(Product);
@@ -47,7 +48,11 @@ const syncDb = () => {
   Category.belongsToMany(Product, { through: ProductCategory });
 
   // Define Cart Association
-  Cart.belongsToMany(Product, { through: CartItem, uniqueKey: false });
+  Cart.belongsToMany(Product, { through: CartItem });
+
+  // Define Address Association
+  Customer.hasMany(Address);
+  Address.belongsTo(Customer);
 };
 
 module.exports = syncDb;

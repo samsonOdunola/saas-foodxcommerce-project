@@ -1,27 +1,31 @@
 const crypto = require('crypto');
 const Customer = require('../models/customer');
-const Cart = require('../models/cart');
-const Order = require('../models/order');
 const { hashPassword, comparePassword } = require('../utils/hashPassword');
 const sendMail = require('../utils/email');
 const { signUser } = require('../utils/authorisation');
 const response = require('../utils/response');
+const Address = require('../models/address');
+const Order = require('../models/order');
+const Product = require('../models/product');
+const ProductReview = require('../models/product_review');
 
 require('dotenv').config();
+// TODO
+// Fix crash when verifying email. Might have something to do with the email token
 
-const signup = async (req, res) => {
+async function signup(req, res) {
   let user;
   try {
     const {
       name, email, phoneNumber, password,
     } = req.body;
     const passwordHash = await hashPassword(password);
-    const token = crypto.randomBytes(32).toString('hex');
+    const verificationToken = crypto.randomBytes(32).toString('hex');
 
     user = await Customer.create({
-      name, email, phoneNumber, password: passwordHash, verificationToken: token,
+      name, email, phoneNumber, password: passwordHash, verificationToken,
     });
-    const emailResult = await sendMail(email, token);
+    const emailResult = await sendMail(email, verificationToken);
     console.log(emailResult);
   } catch (err) {
     return res.status(response.BAD_REQUEST).json({
@@ -29,7 +33,7 @@ const signup = async (req, res) => {
     });
   }
   return res.status(response.CREATED).json({ success: true, message: 'Signup Successfull', data: user });
-};
+}
 
 const verifyEmail = async (req, res) => {
   let user;
@@ -89,102 +93,134 @@ const signin = async (req, res) => {
     success: true, message: 'success', data: user, token,
   });
 };
-const addToCart = async (req, res) => {
-  let cart = null;
 
+const resetPassword = async (req, res) => {
   try {
-    // retrieve customer PK from request using query incase there is a guest user without an id
-    const { item } = req.query;
-    const { id } = req.params;
-    // retrive item to be inserted into cart from request
-    if (id) { // guest user will not have a user id
-      cart = await Cart.findOne({ where: { CustomerId: id } });
-      if (cart) { // if user has a cart
-        await cart.addProduct(item);
-      } else {
-        cart = await Cart.create({ CustomerId: id });
-        await cart.addProduct(item);
-      }
-    } else { // cart for guest user
+    const { newPassword } = req.body;
+    const { userId } = req.params;
 
+    const userDetails = await Customer.findByPk(userId);
+    const passwordHash = await hashPassword(newPassword);
+
+    await userDetails.update({ password: passwordHash });
+  } catch (err) {
+    return res.status(response.BAD_REQUEST).json({
+      success: false, message: 'Error in reseting password', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({
+    success: true, message: 'Password reset Successfull', data: {},
+  });
+};
+const viewAllOrder = async (req, res) => {
+  let allOrders = [];
+  try {
+    const { userId } = req.params;
+    allOrders = await Order.findAll({ where: { CustomerId: userId }, include: Product });
+  } catch (err) {
+    return res.status(response.BAD_REQUEST).json({
+      success: false, message: 'Cannot retrieve orders', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({
+    success: true, message: 'success', data: allOrders,
+  });
+};
+const viewOrder = async (req, res) => {
+  let order;
+  try {
+    const { userId, orderId } = req.params;
+    order = await Order.findAll({ where: { id: orderId, CustomerId: userId }, include: Product });
+  } catch (err) {
+    return res.status(response.BAD_REQUEST).json({
+      success: false, message: 'Cannot retrieve order detail', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({
+    success: true, message: 'success', data: order,
+  });
+};
+
+// const inbox = async (req, res) => { };
+const reviews = async (req, res) => {
+  let userReviews = [];
+  try {
+    const { userId } = req.params;
+    userReviews = await ProductReview.findAll({ where: { CustomerId: userId }, include: Product });
+  } catch (err) {
+    return res.status(response.BAD_REQUEST).json({
+      success: false, message: 'Cannot retrieve user reviews', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({
+    success: true, message: 'success', data: userReviews,
+  });
+};
+const addAddress = async (req, res) => {
+  let newAddress;
+  try {
+    const { userId } = req.params;
+    const {
+      line1, line2, city, state, country, nearestLandmark,
+    } = req.body;
+    const existingAddress = await Address.findOne({ where: { CustomerId: userId } });
+
+    if (existingAddress) {
+      newAddress = await Address.create({
+        line1, line2, city, State: state, country, nearestLandmark, CustomerId: userId,
+      });
+    } else {
+      newAddress = await Address.create({
+        line1,
+        line2,
+        city,
+        State: state,
+        country,
+        nearestLandmark,
+        CustomerId: userId,
+        defaultAddress: true,
+      });
     }
   } catch (err) {
     return res.status(response.BAD_REQUEST).json({
-      success: false, message: 'Item not added to Cart', error: err, data: {},
+      success: false, message: 'Error in adding Address', error: err.message, data: {},
     });
   }
   return res.status(response.OK).json({
-    success: true, message: 'Item added to cart', data: cart,
+    success: true, message: 'success', data: newAddress,
   });
 };
-const cart = async (req, res) => {
-  let userCart = null;
-  let productList = [];
+const selectDefaultAddress = async (req, res) => {
+  let updatedAddress;
   try {
-    const { userId } = req.query;
-
-    userCart = await Cart.findOne({ where: { CustomerId: userId } });
-    productList = await userCart.getProducts({ attributes: ['title', 'id', 'sellingPrice', 'discount', 'image'] });
-  } catch (err) {
-    return res.status(response.NOT_FOUND).json({
-      success: false, message: 'Error in retrieving cart Items', error: err.message, data: {},
+    const { userId, addressId } = req.params;
+    const existingDefaultAddress = await Address.findOne({
+      where:
+        { CustomerId: userId, defaultAddress: true },
     });
-  }
-  return res.status(response.OK).json({
-    success: true, message: 'Cart Items retrieved', data: productList,
-  });
-};
-const createOrder = async (req, res) => {
-  let order;
-  try {
-    let subTotal = 0.0;
-    const tax = 0.0;
-    const shipping = 0.0;
-    const orderDiscount = 0.0;
-    let grandTotal = 0.0;
-    const { userId } = req.params;
-    const { data } = req.body;
-    const user = await Customer.findByPk(userId);
-    data.map((product) => {
-      // eslint-disable-next-line camelcase
-      const { sellingPrice, Cart_Item, discount } = product;
-      // eslint-disable-next-line camelcase
-      const { quantity } = Cart_Item;
-      subTotal += ((sellingPrice * quantity) - discount);
-    });
+    updatedAddress = await Address.findOne({ where: { id: addressId } });
 
-    grandTotal = subTotal + tax + shipping - orderDiscount;
-
-    order = await Order.create({
-      CustomerId: user.id,
-      subTotal,
-      tax,
-      shipping,
-      discount: orderDiscount,
-      grandTotal,
-      name: user.name,
-      email: user.email,
-      address: user.address,
-      phone: user.phoneNumber,
-    });
-    data.map(async (product) => {
-      // eslint-disable-next-line camelcase
-      const { id, Cart_Item } = product;
-      // eslint-disable-next-line camelcase
-      console.log(Cart_Item.quantity);
-
-      // eslint-disable-next-line camelcase
-      await order.addProducts(id, { through: { quantity: Cart_Item.quantity } });
-    });
+    // Update respective address
+    await existingDefaultAddress.update({ defaultAddress: false });
+    await updatedAddress.update({ defaultAddress: true });
   } catch (err) {
     return res.status(response.BAD_REQUEST).json({
-      success: false, message: 'Error in creating order', error: err.message, data: {},
+      success: false, message: 'Error in updating Address', error: err.message, data: {},
     });
   }
   return res.status(response.OK).json({
-    success: true, message: 'Order Created', data: order,
+    success: true, message: 'success', data: updatedAddress,
   });
 };
+
 module.exports = {
-  signup, verifyEmail, signin, addToCart, cart, createOrder,
+  signup,
+  verifyEmail,
+  signin,
+  resetPassword,
+  viewAllOrder,
+  viewOrder,
+  reviews,
+  addAddress,
+  selectDefaultAddress,
 };

@@ -3,6 +3,9 @@ const sequelize = require('../config/mysql.config');
 
 class Order extends Model { }
 
+// TODO -
+// Add deliveryType to model so i can use it when generating order
+
 Order.init({
   id: {
     type: DataTypes.BIGINT,

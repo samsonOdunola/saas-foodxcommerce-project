@@ -12,7 +12,7 @@ const connectDb = async () => {
   try {
     syncDb();
     // await Mongoose.connect(mongoUri, options);
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('Database connected');
     App.listen(port, () => {
       console.log(`Server is listening on port ${port}`);

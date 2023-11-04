@@ -18,7 +18,7 @@ Transaction.init({
     defaultValue: 'Debit',
   },
   mode: {
-    type: DataTypes.ENUM('Paystack', 'Cash On Delivery', 'Flutter'),
+    type: DataTypes.ENUM('Prepaid', 'Pay On Delivery', 'Flutter'),
   },
   status: {
     type: DataTypes.ENUM('New', 'Cancelled', 'Failed', 'Pending', 'Declined', 'Rejected', 'Success'),

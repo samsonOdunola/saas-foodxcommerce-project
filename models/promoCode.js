@@ -29,6 +29,11 @@ PromoCode.init({
     allowNull: false,
     defaultValue: new Date(),
   },
+  used: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
 
 }, {
   sequelize,

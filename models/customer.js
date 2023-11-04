@@ -8,7 +8,6 @@ Customer.init({
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
-
     autoIncrement: true,
   },
   email: {
@@ -27,9 +26,6 @@ Customer.init({
   phoneNumber: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  address: {
-    type: DataTypes.STRING,
   },
   verified: {
     type: DataTypes.BOOLEAN,
