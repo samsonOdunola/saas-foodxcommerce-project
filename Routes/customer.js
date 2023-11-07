@@ -10,13 +10,14 @@ const {
   viewOrder,
   reviews,
 } = require('../controllers/customer');
+const { authorizeCustomer } = require('../middleware/authentication');
 
 const router = express.Router();
 
 router.post('/signup', signup);
 router.post('/verify', verifyEmail);
 router.get('/login', signin);
-router.post('/address/:userId', addAddress);
+router.post('/address/:userId', authorizeCustomer, addAddress);
 router.put('/address/:userId/:addressId', selectDefaultAddress);
 router.get('/order/:userId', viewAllOrder);
 router.get('/order/:userId/:orderId', viewOrder);

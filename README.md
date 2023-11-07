@@ -1,92 +1,124 @@
-# saas-foodxcommerce-project
+# Food E-commerce Backend Application
 
+This repository contains the source code for a Node.js-based backend application for a food delivery service. This backend provides the necessary functionalities to manage restaurants, menu items, orders, and user accounts for a food delivery platform.
 
+## Table of Contents
 
-## Getting started
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
+- [Contributing](#contributing)
+- [License](#license)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Prerequisites
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Before setting up and running this application, make sure you have the following prerequisites installed on your system:
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin http://gitlab.lampnets.com/samson/saas-foodxcommerce-project.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](http://gitlab.lampnets.com/samson/saas-foodxcommerce-project/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- [Node.js](https://nodejs.org/) (v12.0.0 or higher)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
+- [mySQL Work Bench](https://dev.mysql.com/downloads/workbench/) (Make sure the mySQL server is running)
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+
+1. Clone this repository to your local machine:
+
+   ```bash
+   git clone https://github.com/samsonOdunola/saas-foodxcommerce-project.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd saas-foodxcommerce-project
+   ```
+
+3. Install the project dependencies:
+
+   ```bash
+   npm install
+   ```
+
+## Configuration
+
+The configuration for the application is stored in the `config` directory. You should create a `.env` file in the root of the project and set the following environment variables:
+
+```env
+PORT = 3000
+DB_HOST = localhost
+DB_USER = root
+DB_PASSWORD = admin
+DB = food_commerce_db
+EMAIL_USER = email address for sending notifications
+EMAIL_PASSWORD = password for email
+CLIENT_ID = client id for email service
+CLIENT_SECRET = client secret for email service
+REFRESH_TOKEN = refresh token for email service
+HOST = http://localhost
+JWT_KEY = secret key for jason web token
+PAYSTACK_SECRET = paystack secret key for payment
+PAYSTACK_CALLBACK_URL = callback url for paystack
+```
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+To start the application, run the following command:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+npm start
+```
+
+The server will start and listen on the port specified in your `.env` file (default is 3000).
+
+## API Endpoints
+
+The application provides the following API endpoints:
+
+- **/api/restaurants**:
+  - GET: Retrieve a list of all restaurants.
+  - POST: Create a new restaurant.
+
+- **/api/restaurants/:id**:
+  - GET: Retrieve a specific restaurant by ID.
+  - PUT: Update a specific restaurant.
+  - DELETE: Delete a specific restaurant.
+
+- **/api/menu**:
+  - GET: Retrieve a list of all menu items.
+  - POST: Create a new menu item.
+
+- **/api/menu/:id**:
+  - GET: Retrieve a specific menu item by ID.
+  - PUT: Update a specific menu item.
+  - DELETE: Delete a specific menu item.
+
+- **/api/orders**:
+  - GET: Retrieve a list of all orders.
+  - POST: Create a new order.
+
+- **/api/orders/:id**:
+  - GET: Retrieve a specific order by ID.
+  - PUT: Update a specific order.
+  - DELETE: Delete a specific order.
+
+- **/api/auth/register**:
+  - POST: Register a new user account.
+
+- **/api/auth/login**:
+  - POST: Login and obtain a JWT token for authentication.
+
+Please refer to the source code for detailed information on how to use these endpoints.
+
+## Database Schema
+
+The application uses MongoDB as its database. The schema for the database can be found in the `models` directory.
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+If you want to contribute to this project, please fork the repository and create a pull request with your changes. Make sure to follow the [Contribution Guidelines](CONTRIBUTING.md).
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This project is licensed under the [MIT License](LICENSE). You are free to use and modify the code for your own purposes.

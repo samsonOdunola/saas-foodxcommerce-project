@@ -16,4 +16,14 @@ const signUser = async (user) => {
   });
 };
 
-module.exports = { signUser };
+const verifyUser = async (token) => new Promise((resolve, reject) => {
+  jwt.verify(token, privateKey, (err, decodedInfo) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve(decodedInfo);
+    }
+  });
+});
+
+module.exports = { signUser, verifyUser };

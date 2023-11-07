@@ -4,6 +4,7 @@ const Staff = require('../models/staff');
 const response = require('../utils/response');
 const { hashPassword, comparePassword } = require('../utils/hashPassword');
 const { signUser } = require('../utils/authorisation');
+const { sendMail } = require('../utils/email');
 
 const addStaff = async (req, res) => {
   let newStaff;
@@ -13,6 +14,7 @@ const addStaff = async (req, res) => {
     } = req.body;
     const passwordHash = await hashPassword(password);
     const verificationToken = crypto.randomBytes(32).toString('hex');
+    await sendMail(email, verificationToken);
 
     newStaff = await Staff.create({
       firstName, lastName, middleName, phoneNumber, email, passwordHash, verificationToken,

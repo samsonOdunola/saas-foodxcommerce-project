@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const Customer = require('../models/customer');
 const { hashPassword, comparePassword } = require('../utils/hashPassword');
-const sendMail = require('../utils/email');
+const { sendMail } = require('../utils/email');
 const { signUser } = require('../utils/authorisation');
 const response = require('../utils/response');
 const Address = require('../models/address');
@@ -11,7 +11,6 @@ const ProductReview = require('../models/product_review');
 
 require('dotenv').config();
 // TODO
-// Fix crash when verifying email. Might have something to do with the email token
 
 async function signup(req, res) {
   let user;
@@ -21,12 +20,11 @@ async function signup(req, res) {
     } = req.body;
     const passwordHash = await hashPassword(password);
     const verificationToken = crypto.randomBytes(32).toString('hex');
+    await sendMail(email, verificationToken);
 
     user = await Customer.create({
       name, email, phoneNumber, password: passwordHash, verificationToken,
     });
-    const emailResult = await sendMail(email, verificationToken);
-    console.log(emailResult);
   } catch (err) {
     return res.status(response.BAD_REQUEST).json({
       success: false, message: 'Error in creating Resource', error: err.message, data: {},
