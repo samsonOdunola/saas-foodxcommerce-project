@@ -1,10 +1,9 @@
-// const Mongoose = require('mongoose');
-// const { mongoUri, options } = require('./config/mongo.config');
 const syncDb = require('./db_sync/db_relationship');
 const App = require('./app');
 require('dotenv').config();
 const sequelize = require('./config/mysql.config');
-// require('./models/cart');
+// eslint-disable-next-line no-unused-vars
+const { populatePermissions } = require('./config/createpermissions');
 
 const port = process.env.PORT || 5000;
 
@@ -12,13 +11,14 @@ const connectDb = async () => {
   try {
     syncDb();
     // await Mongoose.connect(mongoUri, options);
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log('Database connected');
+    // populatePermissions();
     App.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 connectDb();

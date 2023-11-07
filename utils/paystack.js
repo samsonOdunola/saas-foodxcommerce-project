@@ -30,7 +30,10 @@ const verifyTransaction = async (reference) => {
     Authorization: `Bearer ${payStackSecret}`,
   };
   return new Promise((resolve, reject) => {
-    axios.get(verificationURL, { headers }).then((response) => resolve(response)).catch((err) => reject(err));
+    axios.get(
+      verificationURL,
+      { headers },
+    ).then((response) => resolve(response)).catch((err) => reject(err));
   });
 };
 

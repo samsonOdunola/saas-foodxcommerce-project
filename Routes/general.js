@@ -7,8 +7,11 @@ const {
 } = require('../controllers/cart');
 
 const {
-  generateOrder, verifyOrder, confirmShipment, confirmDelivery,
+  generateOrder, verifyOrder,
+  initiateDeliveryConfirmation, finalizeDeliveryConfirmation, confirmShipment,
 } = require('../controllers/order');
+
+const { likeProduct } = require('../controllers/inventory');
 
 const router = express.Router();
 
@@ -32,7 +35,12 @@ router.put('/cart/product/:userId', updateCartItemQty);
 router.post('/order/:userId', generateOrder);
 router.get('/order/verify/:transactionReference', verifyOrder);
 router.get('/order/verify/shipment/:transactionReference', confirmShipment);
-router.get('/order/verify/delivery/:transactionReference', confirmDelivery);
+router.post('/order/verify/delivery/:transactionReference', initiateDeliveryConfirmation);
+router.put('/order/verify/delivery/:transactionReference', finalizeDeliveryConfirmation);
+
+// Product
+
+router.put('/product//like/:productId', likeProduct);
 
 // Review
 

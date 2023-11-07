@@ -75,6 +75,9 @@ Order.init({
     type: DataTypes.STRING,
     allowNull: true,
   },
+  deliveryCode: {
+    type: DataTypes.STRING,
+  },
 
 }, {
   sequelize,

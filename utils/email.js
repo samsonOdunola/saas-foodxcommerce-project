@@ -30,5 +30,20 @@ const sendMail = async (email, token) => {
     }
   });
 };
+const sendconfirmationCodeMail = async (email, confirmationCode) => {
+  const mailOptions = {
+    from: `${process.env.EMAIL_USER}`,
+    to: `${email}`,
+    subject: 'Delivery Confirmation Code',
+    text: `Your Delivery confirmation code is ${confirmationCode}, please share this code with the delivery driver. Do not share this cod with any other person`,
+  };
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      throw new Error(err);
+    } else {
+      return info.response;
+    }
+  });
+};
 
-module.exports = sendMail;
+module.exports = { sendMail, sendconfirmationCodeMail };

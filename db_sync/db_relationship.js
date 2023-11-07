@@ -11,6 +11,10 @@ const ProductReview = require('../models/product_review');
 const PromoCode = require('../models/promoCode');
 const Transaction = require('../models/transaction');
 const Address = require('../models/address');
+const Staff = require('../models/staff');
+const Role = require('../models/role');
+const Permission = require('../models/permissions');
+const RolePermission = require('../models/role_permission');
 
 const syncDb = () => {
   // Define Customer Associations
@@ -53,6 +57,17 @@ const syncDb = () => {
   // Define Address Association
   Customer.hasMany(Address);
   Address.belongsTo(Customer);
+
+  // Define Staff Association
+  Staff.belongsTo(Role);
+
+  // Define role association
+  Role.hasOne(Staff);
+  Role.belongsToMany(Permission, { through: RolePermission });
+
+  // Define Permission Association
+
+  Permission.belongsToMany(Role, { through: RolePermission });
 };
 
 module.exports = syncDb;
