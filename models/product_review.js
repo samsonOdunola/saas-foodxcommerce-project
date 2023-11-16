@@ -16,6 +16,7 @@ ProductReview.init({
   rating: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
+
   },
 }, {
   sequelize,

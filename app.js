@@ -2,12 +2,20 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+const swaggerJsDocs = YAML.load('./api.yaml');
+
 const customerRoute = require('./Routes/customer');
 const generalRoute = require('./Routes/general');
 const staffRoute = require('./Routes/staff');
 const inventoryRoute = require('./Routes/inventory');
+const reviewRoute = require('./Routes/reviews');
+const promoRoute = require('./Routes/promocode');
 
 const App = express();
+App.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 App.use(express.urlencoded({ extended: false }));
 App.use(express.json({ limit: '50mb' }));
 App.use(helmet());
@@ -20,5 +28,7 @@ App.use('/api/v1', generalRoute);
 App.use('/api/v1/customer', customerRoute);
 App.use('/api/v1/staff', staffRoute);
 App.use('/api/v1/inventory', inventoryRoute);
+App.use('/api/v1/review', reviewRoute);
+App.use('/api/v1/promo', promoRoute);
 
 module.exports = App;

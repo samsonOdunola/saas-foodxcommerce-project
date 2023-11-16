@@ -211,6 +211,45 @@ const selectDefaultAddress = async (req, res) => {
   });
 };
 
+const getCustomerById = async (req, res) => {
+  let customer;
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(response.BAD_REQUEST).json({
+        success: false, message: 'Error in retrieving User', error: 'No User Id supplied', data: {},
+      });
+    }
+    customer = await Customer.findByPk(userId);
+  } catch (err) {
+    return res.status(response.BAD_REQUEST).json({
+      success: false, message: 'Error in retrieving User', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({
+    success: true, message: 'success', data: customer,
+  });
+};
+const getAllCustomer = async (req, res) => {
+  let customers = [];
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(response.BAD_REQUEST).json({
+        success: false, message: 'Error in retrieving User', error: 'No User Id supplied', data: {},
+      });
+    }
+    customers = await Customer.findAll();
+  } catch (err) {
+    return res.status(response.BAD_REQUEST).json({
+      success: false, message: 'Error in retrieving User', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({
+    success: true, message: 'success', data: customers,
+  });
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -221,4 +260,6 @@ module.exports = {
   reviews,
   addAddress,
   selectDefaultAddress,
+  getCustomerById,
+  getAllCustomer,
 };

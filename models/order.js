@@ -78,6 +78,9 @@ Order.init({
   deliveryCode: {
     type: DataTypes.STRING,
   },
+  deliveryType: {
+    type: DataTypes.ENUM('homeDelivery', 'Store pick up'),
+  },
 
 }, {
   sequelize,

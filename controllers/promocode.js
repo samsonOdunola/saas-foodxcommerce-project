@@ -36,27 +36,20 @@ const removePromoCode = async (req, res) => {
   return res.status(response.OK).json({ success: true, message: 'Code deleted successfully', data: {} });
 };
 
-const getPromoCodeById = async (req, res) => {
-  let promoCode;
-  try {
-    const { promoId } = req.params;
-
-    promoCode = await PromoCode.findOne({ where: { id: promoId } });
-    if (!promoCode) {
-      return res.status(response.NOT_FOUND).json({
-        success: false, message: 'Could not find promo code', error: 'error', data: {},
-      });
-    }
-  } catch (err) {
-    return res.status(response.INTERNAL_SERVER_ERROR).json({
-      success: false, message: 'Error in retrieving Information', error: err.message, data: {},
-    });
-  }
-  return res.status(response.OK).json({ success: true, message: 'success', data: promoCode });
-};
 const getAllPromoCodes = async (req, res) => {
   let promoCodes = [];
+  let promoCode;
   try {
+    const { promoId } = req.query;
+    if (promoId) {
+      promoCode = await PromoCode.findOne({ where: { id: promoId } });
+      if (!promoCode) {
+        return res.status(response.NOT_FOUND).json({
+          success: false, message: 'Could not find promo code', error: 'error', data: {},
+        });
+      }
+      return res.status(response.OK).json({ success: true, message: 'success', data: promoCode });
+    }
     promoCodes = await PromoCode.findAll();
   } catch (err) {
     return res.status(response.INTERNAL_SERVER_ERROR).json({
@@ -82,5 +75,5 @@ const deletePromoCode = async (req, res) => {
   return res.status(response.OK).json({ success: true, message: 'promo code deleted', data: {} });
 };
 module.exports = {
-  addPromoCode, removePromoCode, getPromoCodeById, getAllPromoCodes, deletePromoCode,
+  addPromoCode, removePromoCode, getAllPromoCodes, deletePromoCode,
 };

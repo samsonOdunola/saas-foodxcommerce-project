@@ -76,48 +76,42 @@ The server will start and listen on the port specified in your `.env` file (defa
 
 The application provides the following API endpoints:
 
-- **/api/restaurants**:
-  - GET: Retrieve a list of all restaurants.
-  - POST: Create a new restaurant.
+- **api/v1/staff**:
+  - POST: Creates a new staff.
 
-- **/api/restaurants/:id**:
-  - GET: Retrieve a specific restaurant by ID.
-  - PUT: Update a specific restaurant.
-  - DELETE: Delete a specific restaurant.
+- **/api/v1/staff/?email&token**:
+  - GET: Verify a staff by email and token. 
 
-- **/api/menu**:
-  - GET: Retrieve a list of all menu items.
-  - POST: Create a new menu item.
+- **/api/v1/staff/login**:
+  - GET: Logs in a staff and issue a token.  
 
-- **/api/menu/:id**:
-  - GET: Retrieve a specific menu item by ID.
-  - PUT: Update a specific menu item.
-  - DELETE: Delete a specific menu item.
+- **/api/v1/staff/all**:
+  - GET: Retrieve all staffs.  
 
-- **/api/orders**:
-  - GET: Retrieve a list of all orders.
-  - POST: Create a new order.
+- **/api/v1/staff/:userId**:
+  - PUT: Modifies a staff.
+  - DELETE: Delletes a staff.
+  - GET: Finds a staff by ID
 
-- **/api/orders/:id**:
-  - GET: Retrieve a specific order by ID.
-  - PUT: Update a specific order.
-  - DELETE: Delete a specific order.
+- **/api/v1/staff/password/:userId**:
+  - PUT: Resets a staff password  
 
-- **/api/auth/register**:
-  - POST: Register a new user account.
+- **/api/v1.staff/roler**:
+  - POST: Creates a new Role
 
-- **/api/auth/login**:
-  - POST: Login and obtain a JWT token for authentication.
+- **/api/v1/staff/role/permission/:roleId**:
+  - POST: Add permissions to a role.
+  - PUT: Updates Permissions for a role
 
 Please refer to the source code for detailed information on how to use these endpoints.
 
 ## Database Schema
 
-The application uses MongoDB as its database. The schema for the database can be found in the `models` directory.
+The application uses mySQL as its database. The schema for the database can be found in the `models` directory.
 
 ## Contributing
 
-If you want to contribute to this project, please fork the repository and create a pull request with your changes. Make sure to follow the [Contribution Guidelines](CONTRIBUTING.md).
+If you want to contribute to this project, please fork the repository and create a pull request with your changes. 
 
 ## License
 

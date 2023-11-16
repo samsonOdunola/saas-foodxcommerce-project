@@ -13,7 +13,6 @@ const Transaction = require('../models/transaction');
 const Address = require('../models/address');
 const Staff = require('../models/staff');
 const Role = require('../models/role');
-const Permission = require('../models/permissions');
 const RolePermission = require('../models/role_permission');
 
 const syncDb = () => {
@@ -26,6 +25,7 @@ const syncDb = () => {
   Transaction.belongsTo(Customer);
   Customer.hasMany(ProductReview);
   ProductReview.belongsTo(Customer);
+  Customer.belongsTo(Role);
 
   // Define Promo code association
   PromoCode.hasMany(Order);
@@ -63,11 +63,8 @@ const syncDb = () => {
 
   // Define role association
   Role.hasOne(Staff);
-  Role.belongsToMany(Permission, { through: RolePermission });
-
-  // Define Permission Association
-
-  Permission.belongsToMany(Role, { through: RolePermission });
+  Role.hasOne(Customer, { foreignKey: { name: 'RoleId', defaultValue: 1 } });
+  Role.hasMany(RolePermission);
 };
 
 module.exports = syncDb;

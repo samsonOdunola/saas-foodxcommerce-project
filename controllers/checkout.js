@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const { Op } = require('sequelize');
 const response = require('../utils/response');
 const Cart = require('../models/cart');
 const Product = require('../models/product');
@@ -10,7 +11,12 @@ const createCheckout = async (req, res) => {
 
     const cartInfo = await Cart.findOne({ where: { CustomerId: userId, status: 'New' }, include: Product });
     const productList = await cartInfo.getProducts({ attributes: ['title', 'id', 'sellingPrice', 'discount', 'image'] });
-    const address = await Address.findOne({ where: { CustomerId: userId, defaultAddress: true } });
+    const address = await Address.findOne({
+      where: {
+        [Op.and]: [{ CustomerId: userId },
+          { defaultAddress: true }],
+      },
+    });
 
     const deliveryType = 'Pickup';
     const customerAddress = address;

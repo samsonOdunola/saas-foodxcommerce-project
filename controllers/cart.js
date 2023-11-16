@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const response = require('../utils/response');
 const Cart = require('../models/cart');
 const CartItem = require('../models/cart_item');
@@ -11,11 +12,11 @@ const addToCart = async (req, res) => {
 
   try {
     // retrieve customer PK from request using query incase there is a guest user without an id
-    const { productId } = req.query;
-    const { userId } = req.params;
+
+    const { userId, productId } = req.params;
     // retrive item to be inserted into cart from request
     if (userId) { // guest user will not have a user id
-      cart = await Cart.findOne({ where: { CustomerId: userId, status: 'New' } });
+      cart = await Cart.findOne({ where: { [Op.and]: [{ CustomerId: userId }, { status: 'New' }] } });
       if (cart) { // if user has a cart
         await cart.addProduct(productId);
       } else {
@@ -40,7 +41,7 @@ const showCart = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    userCart = await Cart.findOne({ where: { CustomerId: userId, status: 'New' } });
+    userCart = await Cart.findOne({ where: { [Op.and]: [{ CustomerId: userId }, { status: 'New' }] }, include: Product });
     productList = await userCart.getProducts({ attributes: ['title', 'id', 'sellingPrice', 'discount', 'image'] });
   } catch (err) {
     return res.status(response.NOT_FOUND).json({
@@ -76,17 +77,16 @@ const updateCartItemQty = async (req, res) => {
   let userCart;
   let productList = [];
   try {
-    const { userId } = req.params;
-    const { productId, action } = req.query;
+    const { userId, productId, action } = req.params;
 
     if (action === 'INCREMENT') {
-      userCart = await Cart.findOne({ where: { CustomerId: userId, status: 'New' } });
+      userCart = await Cart.findOne({ where: { [Op.and]: [{ CustomerId: userId }, { status: 'New' }] }, include: Product });
       await CartItem.increment(
         { quantity: 1 },
         { where: { CartId: userCart.id, ProductId: productId } },
       );
     } else if (action === 'DECREMENT') {
-      userCart = await Cart.findOne({ where: { CustomerId: userId, status: 'New' }, include: Product });
+      userCart = await Cart.findOne({ where: { [Op.and]: [{ CustomerId: userId }, { status: 'New' }] }, include: Product });
       const cartitem = await CartItem.findOne({
         where: {
           CartId: userCart.id,
@@ -96,13 +96,13 @@ const updateCartItemQty = async (req, res) => {
       if (cartitem.quantity > 1) {
         await CartItem.decrement(
           { quantity: 1 },
-          { where: { CartId: userCart.id, ProductId: productId } },
+          { where: { [Op.and]: [{ CartId: userCart.id }, { ProductId: productId }] } },
         );
       }
     }
     productList = await userCart.getProducts({ attributes: ['title', 'id', 'sellingPrice', 'discount', 'image'] });
   } catch (err) {
-    return res.status(response.NOT_FOUND).json({
+    return res.status(response.BAD_REQUEST).json({
       success: false, message: 'Error in incementing Item count', error: err.message, data: {},
     });
   }
