@@ -103,7 +103,7 @@ The application provides the following API endpoints:
   - POST: Add permissions to a role.
   - PUT: Updates Permissions for a role
 
-Please refer to the source code for detailed information on how to use these endpoints.
+Please refer to the swagger documentation for detailed information on how to endpoints.
 
 ## Database Schema
 
