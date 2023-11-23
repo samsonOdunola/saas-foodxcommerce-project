@@ -104,6 +104,58 @@ const likeProduct = async (req, res) => {
   return res.status(response.OK).json({ success: true, message: 'Success', data: {} });
 };
 
+const bulkAdd = async (req, res) => {
+  const products = [];
+  try {
+    const {
+      allProducts,
+    } = req.body;
+
+    allProducts.map(async (item) => {
+      const {
+        title, metaTitle, sellingPrice, costPrice, discount, quantity, longDescription, expiryDate,
+      } = item;
+      // eslint-disable-next-line prefer-const
+      let product = await Product.create({
+        title, metaTitle, sellingPrice, costPrice, discount, quantity, longDescription, expiryDate,
+      });
+      if (!product) {
+        return res.status(response.BAD_REQUEST).json({
+          success: false, message: 'Could not create product', error: 'Error', data: {},
+        });
+      }
+      products.push(product);
+    });
+  } catch (err) {
+    return res.status(response.INTERNAL_SERVER_ERROR).json({
+      success: false, message: 'Could not create product', error: err.message, data: {},
+    });
+  }
+  return res.status(response.CREATED).json({ success: true, message: 'Products Created', data: products });
+};
+
+const bulkDelete = async (req, res) => {
+  try {
+    const { products } = req.body;
+
+    const deleteItem = async (productId) => {
+      const deleted = await Product.destroy({ where: { id: Number(productId) } });
+      if (deleted === 0) {
+        throw new Error('Product Not Found');
+      }
+      return deleted;
+    };
+
+    const promises = products.map(deleteItem);
+    await Promise.all(promises);
+  } catch (err) {
+    return res.status(response.INTERNAL_SERVER_ERROR).json({
+      success: false, message: 'Could not delete product', error: err.message, data: {},
+    });
+  }
+  return res.status(response.OK).json({ success: true, message: 'Products Deleted', data: {} });
+};
+
 module.exports = {
   addNewInventoryItem,
   deleteInventoryItem,
@@ -111,4 +163,6 @@ module.exports = {
   getAllProducts,
   modifyProduct,
   likeProduct,
+  bulkAdd,
+  bulkDelete,
 };

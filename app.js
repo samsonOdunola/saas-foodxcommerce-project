@@ -13,6 +13,8 @@ const staffRoute = require('./Routes/staff');
 const inventoryRoute = require('./Routes/inventory');
 const reviewRoute = require('./Routes/reviews');
 const promoRoute = require('./Routes/promocode');
+const reportRoute = require('./Routes/report');
+const transactionRoute = require('./Routes/transaction');
 
 const App = express();
 App.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
@@ -30,5 +32,7 @@ App.use('/api/v1/staff', staffRoute);
 App.use('/api/v1/inventory', inventoryRoute);
 App.use('/api/v1/review', reviewRoute);
 App.use('/api/v1/promo', promoRoute);
+App.use('/api/v1/report', reportRoute);
+App.use('/api/v1/transaction', transactionRoute);
 
 module.exports = App;

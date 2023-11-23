@@ -44,14 +44,6 @@ router.post('/order/delivery/:transactionReference', logisticAccess.create, init
 router.put('/order/delivery/:transactionReference', logisticAccess.updateAny, finalizeDeliveryConfirmation);
 
 // Product
-
 router.put('/product/like/:productId', likeProduct);
 
-// Review
-
-// router.post('/verify', verifyEmail);
-// router.get('/login', signin);
-// router.post('/cart/:id', addToCart);
-// router.get('/cart', cart);
-// router.post('/order', createOrder);
 module.exports = router;

@@ -23,8 +23,10 @@ const addToCart = async (req, res) => {
         cart = await Cart.create({ CustomerId: userId });
         await cart.addProduct(productId);
       }
-    } else { // cart for guest user
-
+    } else {
+      return res.status(response.NOT_FOUND).json({
+        success: false, message: 'Cannot Add to Cart', error: 'User does not exist', data: {},
+      });
     }
   } catch (err) {
     return res.status(response.BAD_REQUEST).json({

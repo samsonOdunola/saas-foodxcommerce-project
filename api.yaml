@@ -1194,6 +1194,12 @@ paths:
         - application/json
       tags:
         - Product      
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+          example: Bearer Token
       responses:
         200:
           description: An array of product objects
@@ -1208,6 +1214,120 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/productresponse'
+  /Inventory/products:
+    post:
+      description: Bulk Delete of Products using product Id
+      tags:
+        - Product
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+          example: Bearer Token
+        - in: body
+          required: true
+          description: Array of product information
+          schema:
+            type: object
+            properties:
+              allProducts:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/definitions/product'  
+      responses:
+        200:
+          description: okay
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        401:
+          description: Unauthorised
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        500:
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    delete:
+      description: Bulk Delete of Products using product Id
+      tags:
+        - Product
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+          example: Bearer Token
+        - in: body
+          required: true
+          description: Array of product id
+          schema:
+            type: object
+            properties:
+              products:
+                type: array 
+                items:
+                  type: number  
+      responses:
+        200:
+          description: okay
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        401:
+          description: Unauthorised
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        500:
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
   /product/like/{productId}:
     put:
       description: like a Product via product Id
@@ -3050,7 +3170,155 @@ paths:
                 type: string
               data:
                 type: object
-
+  /transaction:
+    get:
+      description: Returns all Transactions
+      tags:
+        - Transaction
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+          example: Bearer Token
+      responses:
+        200:
+          description: okay
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        401:
+          description: Unauthorised
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        500:
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+  /transaction/{transactionReference}:
+    put:
+      description: Verify a transaction
+      tags:
+        - Transaction
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+          example: Bearer Token
+        - in: path
+          name: transactionReference
+          required: true
+          type: string
+      responses:
+        200:
+          description: okay
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        401:
+          description: Unauthorised
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        500:
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    get:
+      description: Returns transaction by transaction reference
+      tags:
+        - Transaction
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          type: string
+          example: Bearer Token
+        - in: path
+          name: transactionReference
+          required: true
+          type: string
+      responses:
+        200:
+          description: okay
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        401:
+          description: Unauthorised
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+        500:
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+      
 
 
 

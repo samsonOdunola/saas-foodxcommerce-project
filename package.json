@@ -15,6 +15,7 @@
     "eslint-plugin-import": "^2.28.1"
   },
   "dependencies": {
+    "@jsreport/nodejs-client": "^4.0.0",
     "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.0",
