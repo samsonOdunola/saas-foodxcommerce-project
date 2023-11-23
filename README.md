@@ -8,10 +8,11 @@ This repository contains the source code for a Node.js-based backend application
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Initial Values](#Initial-Values)
 - [API Endpoints](#api-endpoints)
 - [Database Schema](#database-schema)
 - [Contributing](#contributing)
-- [License](#license)
+
 
 ## Prerequisites
 
@@ -19,7 +20,7 @@ Before setting up and running this application, make sure you have the following
 
 - [Node.js](https://nodejs.org/) (v12.0.0 or higher)
 - [npm](https://www.npmjs.com/) (Node Package Manager)
-- [mySQL Work Bench](https://dev.mysql.com/downloads/workbench/) (Make sure the mySQL server is running)
+- [mySQL Work Bench](https://dev.mysql.com/downloads/workbench/) (Ensure the mySQL server is running)
 
 ## Installation
 
@@ -62,6 +63,18 @@ PAYSTACK_SECRET = paystack secret key for payment
 PAYSTACK_CALLBACK_URL = callback url for paystack
 ```
 
+## Initial Values
+
+Roles of Customer and Owner are populated into the database on initial run.
+
+  * Inital Permissions:
+    Permissions are defined for the roles 'Customer' and 'Owner' via the function:
+    ```javascript
+    await initPermissions();
+    ``` 
+    Note: This function should be called once and then disabled after to prevent multiple permissions entry
+    
+
 ## Usage
 
 To start the application, run the following command:
@@ -103,7 +116,7 @@ The application provides the following API endpoints:
   - POST: Add permissions to a role.
   - PUT: Updates Permissions for a role
 
-Please refer to the swagger documentation for detailed information on how to endpoints.
+Please refer to the [swagger documentation](http://localhost:3000/api-docs/) after running the application for detailed information API endpoints.
 
 ## Database Schema
 
@@ -112,7 +125,3 @@ The application uses mySQL as its database. The schema for the database can be f
 ## Contributing
 
 If you want to contribute to this project, please fork the repository and create a pull request with your changes. 
-
-## License
-
-This project is licensed under the [MIT License](LICENSE). You are free to use and modify the code for your own purposes.
